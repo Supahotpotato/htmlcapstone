@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waste Sorting Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e8f5e9;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    /* Mobile-friendly styles */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      .game-container {
+        gap: 15px;
+      }
+
+      .bin {
+        width: 150px;
+        height: 200px;
+      }
+
+      .bin h3 {
+        font-size: 0.9em;
+      }
+
+      .item {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      .result-message {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
+      .completion-message {
+        font-size: 1.1em;
+        padding: 15px;
+      }
+    }
+
+    
+    @media (hover: none) {
+      .item {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: none;
+      }
+
+      .item:active {
+        transform: scale(1.05);
+        background-color: #f0f0f0;
+      }
+    }
+
+    .play-me {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(46, 125, 50, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .play-me h1 {
+      color: white;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .play-button {
+      padding: 15px 60px;
+      font-size: 1.5em;
+      background-color: #fff176;
+      border: none;
+      border-radius: 50px;
+      color: #2e7d32;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .play-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-content {
+      display: none;
+    }
+
+    h1 {
+      color: #2e7d32;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px auto;
+      flex-wrap: wrap;
+      max-width: 1200px;
+    }
+
+   
+    .results-container {
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      pointer-events: none;
+    }
+
+    .result-message {
+      margin: 10px auto;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
+      display: inline-block;
+      animation: fadeInDown 0.5s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      pointer-events: auto;
+    }
+
+    .correct {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      border: 2px solid #2e7d32;
+    }
+
+    .incorrect {
+      background-color: #ffcdd2;
+      color: #c62828;
+      border: 2px solid #c62828;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .completion-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin-top: 0;
+      padding: 20px 40px;
+      background-color: #fff176;
+      border-radius: 8px;
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #f57f17;
+      display: none;
+      animation: popIn 0.5s;
+      z-index: 1000;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .back-home-btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 25px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-home-btn:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .back-home-btn {
+        padding: 8px 20px;
+        font-size: 0.9em;
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .bin {
+      width: 200px;
+      height: 250px;
+      border: 3px solid #2e7d32;
+      border-radius: 10px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .bin::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #ddd;
+      border-radius: 0 0 7px 7px;
+    }
+
+    .bin h3 {
+      margin-top: 10px;
+      color: white;
+      padding: 8px;
+      border-radius: 5px;
+      font-size: 1.1em;
+    }
+
+    /* Specific bin styles */
+    .bin:nth-child(1) { /* Biodegradable */
+      background: linear-gradient(to bottom, #4caf50, #2e7d32);
+    }
+
+    .bin:nth-child(1) h3 {
+      background-color: #1b5e20;
+    }
+
+    .bin:nth-child(2) { /* Recyclable */
+      background: linear-gradient(to bottom, #2196f3, #1976d2);
+    }
+
+    .bin:nth-child(2) h3 {
+      background-color: #0d47a1;
+    }
+
+    .bin:nth-child(3) { /* Non-recyclable */
+      background: linear-gradient(to bottom, #f44336, #d32f2f);
+    }
+
+    .bin:nth-child(3) h3 {
+      background-color: #b71c1c;
+    }
+
+    /* Add recycling symbol animation */
+    .bin::after {
+      content: '♻️';
+      position: absolute;
+      font-size: 40px;
+      opacity: 0.2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .item {
+      padding: 8px 15px;
+      margin: 8px;
+      background-color: #ffffff;
+      border: 2px solid #78909c;
+      border-radius: 8px;
+      cursor: grab;
+      display: inline-block;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      font-size: 14px;
+      user-select: none;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .items-container {
+      margin: 30px auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 800px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .items-container {
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .item {
+        padding: 8px 12px;
+        margin: 4px;
+        font-size: 12px;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      .bin {
+        width: 140px;
+        height: 180px;
+      }
+
+      .bin h3 {
+        font-size: 0.85em;
+        padding: 6px;
+      }
+
+      .result-message {
+        font-size: 0.9em;
+        padding: 8px 16px;
+        margin: 5px auto;
+      }
+    }
+
+    @media (hover: none) {
+      .item:active {
+        transform: scale(1.05);
+        background-color: #f0f0f0;
+      }
+
+      .bin:active {
+        transform: scale(1.02);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="play-me" id="play-screen">
+    <h1>Waste Sorting Game</h1>
+    <button class="play-button" onclick="startGame()">PLAY</button>
+  </div>
+
+  <div class="game-content" id="game-content">
+    <div class="results-container" id="results-container">
+    </div>
+
+    <h1>Waste Sorting Game</h1>
+    <p>Drag the items into the correct bins: Biodegradable, Recyclable, Non-Recyclable</p>
+
+    <div class="game-container">
+      <div class="bin" ondragover="allowDrop(event)" ondrop="drop(event, 'biodegradable')">
+        <h3>Biodegradable</h3>
+      </div>
+      <div class="bin" ondragover="allowDrop(event)" ondrop="drop(event, 'recyclable')">
+        <h3>Recyclable</h3>
+      </div>
+      <div class="bin" ondragover="allowDrop(event)" ondrop="drop(event, 'non-recyclable')">
+        <h3>Non-Recyclable</h3>
+      </div>
+    </div>
+
+    <div class="items-container">
+      <div class="item" draggable="true" ondragstart="drag(event)" id="banana">Banana Peel</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="tin">Tin Can</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="wire">Wire</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="paper">Paper Bag</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="apple">Apple Core</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="plastic">Plastic Bottle</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="leaves">Dead Leaves</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="cardboard">Cardboard Box</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="battery">Old Battery</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="glass">Glass Bottle</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="styrofoam">Styrofoam</div>
+      <div class="item" draggable="true" ondragstart="drag(event)" id="eggshells">Eggshells</div>
+    </div>
+
+    <div id="completion-message" class="completion-message">
+      Perfect! You've sorted all the waste correctly! 🎉
+      <a href="index.html" class="back-home-btn">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const correctBins = {
+      banana: "biodegradable",
+      tin: "recyclable",
+      wire: "non-recyclable",
+      paper: "recyclable",
+      apple: "biodegradable",
+      plastic: "recyclable",
+      leaves: "biodegradable",
+      cardboard: "recyclable",
+      battery: "non-recyclable",
+      glass: "recyclable",
+      styrofoam: "non-recyclable",
+      eggshells: "biodegradable"
+    };
+
+    let correctItems = 0;
+    const totalItems = Object.keys(correctBins).length;
+    let draggedItem = null;
+    let touchTimeout;
+
+    // Shuffle items immediately when page loads
+    window.onload = function() {
+      shuffleItems();
+    };
+
+    function shuffleItems() {
+      const itemsContainer = document.querySelector('.items-container');
+      const items = Array.from(itemsContainer.children);
+      
+      // Clear the container
+      itemsContainer.innerHTML = '';
+      
+      // Shuffle the array using Fisher-Yates algorithm
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      
+      // Add items back in shuffled order
+      items.forEach(item => {
+        itemsContainer.appendChild(item);
+      });
+    }
+
+    function startGame() {
+      document.getElementById('play-screen').style.display = 'none';
+      document.getElementById('game-content').style.display = 'block';
+      addTouchEvents();
+      shuffleItems(); // Shuffle again when game starts
+    }
+
+    function addTouchEvents() {
+      const items = document.querySelectorAll('.item');
+      const bins = document.querySelectorAll('.bin');
+
+      items.forEach(item => {
+        item.addEventListener('touchstart', handleTouchStart, { passive: false });
+        item.addEventListener('touchmove', handleTouchMove, { passive: false });
+        item.addEventListener('touchend', handleTouchEnd, { passive: false });
+      });
+
+      bins.forEach(bin => {
+        bin.addEventListener('touchenter', handleTouchEnter);
+        bin.addEventListener('touchleave', handleTouchLeave);
+      });
+    }
+
+    function handleTouchStart(e) {
+      e.preventDefault();
+      draggedItem = this;
+      this.classList.add('dragging');
+      this.style.opacity = '0.7';
+      
+      const touch = e.touches[0];
+      this.style.position = 'fixed';
+      this.style.left = touch.pageX - this.offsetWidth / 2 + 'px';
+      this.style.top = touch.pageY - this.offsetHeight / 2 + 'px';
+    }
+
+    function handleTouchMove(e) {
+      e.preventDefault();
+      if (!draggedItem) return;
+
+      const touch = e.touches[0];
+      draggedItem.style.left = touch.pageX - draggedItem.offsetWidth / 2 + 'px';
+      draggedItem.style.top = touch.pageY - draggedItem.offsetHeight / 2 + 'px';
+
+      const bin = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (bin && bin.classList.contains('bin')) {
+        bin.classList.add('drag-over');
+      } else {
+        document.querySelectorAll('.bin').forEach(b => b.classList.remove('drag-over'));
+      }
+    }
+
+    function handleTouchEnd(e) {
+      e.preventDefault();
+      if (!draggedItem) return;
+
+      const touch = e.changedTouches[0];
+      const bin = document.elementFromPoint(touch.clientX, touch.clientY);
+
+      document.querySelectorAll('.bin').forEach(b => b.classList.remove('drag-over'));
+
+      if (bin && bin.classList.contains('bin')) {
+        const binType = bin.getAttribute('ondrop').match(/'([^']+)'/)[1];
+        handleDrop(draggedItem.id, binType);
+      }
+
+      draggedItem.classList.remove('dragging');
+      draggedItem.style.opacity = '1';
+      draggedItem.style.position = '';
+      draggedItem.style.left = '';
+      draggedItem.style.top = '';
+      draggedItem = null;
+    }
+
+    function handleDrop(itemId, binType) {
+      const correctBin = correctBins[itemId];
+
+      if (binType === correctBin) {
+        document.getElementById(itemId).classList.add("hidden");
+        showResult(true);
+        correctItems++;
+        checkCompletion();
+      } else {
+        showResult(false);
+      }
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    function showResult(isCorrect) {
+      const resultContainer = document.getElementById('results-container');
+      const resultMessage = document.createElement('div');
+      resultMessage.className = `result-message ${isCorrect ? 'correct' : 'incorrect'}`;
+      resultMessage.textContent = isCorrect ? 'Correct! ✅' : 'Try again! ❌';
+      
+      
+      resultContainer.innerHTML = '';
+      resultContainer.appendChild(resultMessage);
+    }
+
+    function checkCompletion() {
+      if (correctItems === totalItems) {
+        document.getElementById('completion-message').style.display = 'block';
+        document.getElementById('results-container').innerHTML = '';
+      }
+    }
+
+    function drop(event, binType) {
+      event.preventDefault();
+      const itemId = event.dataTransfer.getData("text");
+      const correctBin = correctBins[itemId];
+
+      if (binType === correctBin) {
+        document.getElementById(itemId).classList.add("hidden");
+        showResult(true);
+        correctItems++;
+        checkCompletion();
+      } else {
+        showResult(false);
+      }
+    }
+  </script>
+</body>
+</html>

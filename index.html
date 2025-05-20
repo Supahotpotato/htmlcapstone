@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>♻️ Waste Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      min-height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: url("img/11.jpg") no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .center-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+
+    .enter-button {
+      padding: 15px 40px;
+      font-size: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 10px;
+    }
+
+    .enter-button:hover {
+      background-color: #45a049;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 250px;
+      color: #fff;
+      backdrop-filter: blur(5px);
+    }
+
+    .feature-box h3 {
+      margin-top: 10px;
+      font-size: 20px;
+    }
+
+    .feature-box p {
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .title {
+        font-size: 28px;
+        padding: 0 15px;
+        line-height: 1.3;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        padding: 0 15px;
+        line-height: 1.4;
+        margin-bottom: 30px;
+      }
+
+      .features {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 15px;
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .feature-box {
+        width: 100%;
+        max-width: 300px;
+        margin-bottom: 0;
+        padding: 15px;
+      }
+
+      .feature-box h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .feature-box p {
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 12px;
+      }
+
+      .enter-button {
+        width: 100%;
+        max-width: 280px;
+        padding: 12px 20px;
+        font-size: 16px;
+        margin: 8px 0;
+      }
+
+      .eco-tip-container {
+        margin: 30px 15px;
+        padding: 15px;
+        width: auto;
+      }
+
+      .eco-tip-header {
+        margin-bottom: 10px;
+      }
+
+      .eco-tip-content {
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 12px;
+        margin: 10px 0;
+      }
+
+      .refresh-tip {
+        padding: 8px 16px;
+        font-size: 13px;
+        margin-top: 8px;
+      }
+    }
+
+    @media (hover: none) {
+      .enter-button {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .enter-button:active {
+        background-color: #45a049;
+        transform: scale(0.97);
+      }
+
+      .feature-box {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .feature-box:active {
+        transform: translateY(-2px);
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .refresh-tip {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .refresh-tip:active {
+        transform: scale(0.95);
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .enter-button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .feature-box {
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .eco-tip-container {
+      transition: transform 0.2s ease;
+    }
+
+    @media (max-width: 600px) {
+      .center-container {
+        padding: 30px 15px;
+      }
+
+      .feature-box + .feature-box {
+        margin-top: 0;
+      }
+    }
+
+    .eco-tip-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 40px auto;
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .eco-tip-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .eco-tip-content {
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 8px;
+      background: rgba(76, 175, 80, 0.2);
+    }
+
+    .refresh-tip {
+      background: none;
+      border: 2px solid white;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .refresh-tip:hover {
+      background: white;
+      color: #4CAF50;
+    }
+
+    @keyframes tipFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eco-tip-content.animate {
+      animation: tipFadeIn 0.5s ease-out;
+    }
+
+    @media (max-width: 600px) {
+      .eco-tip-container {
+        margin-top: 30px;
+        padding: 15px;
+      }
+
+      .eco-tip-content {
+        font-size: 16px;
+      }
+
+      .refresh-tip {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="center-container">
+    <div class="title">Brgy.Panducot Smart Waste Management System</div>
+    <div class="subtitle">
+      An eco-friendly solution to track, reduce, and manage waste effectively using modern technologies.
+    </div>
+
+    
+    <button class="enter-button" onclick="enterSite()">Enter</button>
+
+  
+    <div class="features">
+      <div class="feature-box">
+        <h3>💡 About This Page!</h3>
+        <p>Our system provides a comprehensive waste management solution, including
+          waste sorting, recycling, and a fun game to play to help you learn more about waste management.</p>
+      </div>
+      <div class="feature-box">
+        <h3>📖 How to Use This</h3>
+        <p>Learn how to use our waste management system effectively!</p>
+        <button class="enter-button" onclick="readTutorial()" style="margin-top: 10px;">Read</button>
+      </div>
+      <div class="feature-box">
+        <h3>🎮 Play Me!</h3>
+        <p>Test your sorting skills — separate items into the right waste bins!</p>
+        <button class="enter-button" onclick="playGame()" style="margin-top: 10px;">Play</button>
+      </div>
+    </div>
+
+  
+    <div class="eco-tip-container">
+      <div class="eco-tip-header">
+        <span style="font-size: 24px;">🌱</span>
+        <h3 style="margin: 0;">Daily Eco Tip</h3>
+      </div>
+      <div id="ecoTip" class="eco-tip-content">Loading your eco tip...</div>
+      <button class="refresh-tip" onclick="showRandomTip()">New Tip ↻</button>
+    </div>
+  </div>
+
+  <script>
+    function enterSite() {
+      window.location.href = "main.html";
+    }
+
+    function playGame() {
+      window.location.href = "waste-sorting-game.html";
+    }
+
+    function readTutorial() {
+      window.location.href = "tutorial.html";
+    }
+
+    
+    const ecoTips = [
+      "Use reusable bags when shopping to reduce plastic waste! 🛍️",
+      "Start composting kitchen scraps to create nutrient-rich soil! 🌱",
+      "Choose products with minimal packaging to reduce waste! 📦",
+      "Repair items before replacing them to reduce landfill waste! 🔧",
+      "Use a reusable water bottle instead of disposable ones! 💧",
+      "Donate usable items instead of throwing them away! 🎁",
+      "Buy products made from recycled materials! ♻️",
+      "Use cloth napkins instead of paper ones! 🧻",
+      "Start a small garden to reduce packaging waste from produce! 🌿",
+      "Use eco-friendly cleaning products to reduce chemical waste! 🧹",
+      "Collect rainwater for your plants to conserve water! 💦",
+      "Switch to LED light bulbs to reduce energy consumption! 💡",
+      "Use public transport or carpool to reduce carbon emissions! 🚌",
+      "Bring your own containers for takeout food! 🍱",
+      "Use a clothesline instead of a dryer when possible! 👕",
+      "Choose digital receipts instead of paper ones! 📱",
+      "Use a bamboo toothbrush instead of plastic ones! 🪥",
+      "Start a community garden to promote sustainable living! 🌳",
+      "Use beeswax wraps instead of plastic wrap! 🐝",
+      "Repurpose old jars and containers for storage! 🏺",
+      "Use a menstrual cup instead of disposable products! 🌸",
+      "Choose loose tea instead of tea bags! 🍵",
+      "Use a safety razor instead of disposable razors! 🪒",
+      "Make your own cleaning products using natural ingredients! 🧼",
+      "Use a bidet or cloth wipes instead of toilet paper! 🚽",
+      "Choose bar soap instead of liquid soap in plastic bottles! 🧼",
+      "Use a reusable coffee filter instead of paper ones! ☕",
+      "Start a book swap in your community! 📚",
+      "Use a reusable straw instead of plastic ones! 🥤",
+      "Choose products with refillable packaging! 🔄"
+    ];
+
+    function showRandomTip() {
+      const tipElement = document.getElementById('ecoTip');
+      const randomTip = ecoTips[Math.floor(Math.random() * ecoTips.length)];
+      tipElement.classList.remove('animate');
+     
+      void tipElement.offsetWidth;
+      tipElement.classList.add('animate');
+      tipElement.textContent = randomTip;
+    }
+
+   
+    window.onload = showRandomTip;
+  </script>
+</body>
+</html>

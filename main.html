@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Waste Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #4CAF50;
+      --dark-green: #388E3C;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: url("img/12.jpg") no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .parallax {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("images/bg-main.jpg") no-repeat center center fixed;
+      background-size: cover;
+      z-index: -1;
+      animation: parallax 20s linear infinite;
+    }
+
+    @keyframes parallax {
+      0% { background-position: 0 0; }
+      50% { background-position: 0 100px; }
+      100% { background-position: 0 0; }
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
+
+    header, .search-container, .results, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      background-color: var(--green);
+      color: var(--white);
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .search-container {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: border 0.3s ease;
+    }
+
+    .search-container input:focus {
+      border-color: var(--green);
+    }
+
+    .clear-btn {
+      background-color: #ff6347;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .clear-btn:hover {
+      background-color: #ff4500;
+    }
+
+    .results {
+      position: fixed;
+      top: 150px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px);
+      z-index: 1;
+      justify-content: center;
+    }
+
+    .result-item {
+      flex: 0 1 300px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-block;
+      margin: 10px;
+      vertical-align: top;
+    }
+
+    .result-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .highlight {
+      background-color: yellow;
+      font-weight: bold;
+    }
+
+    .result-item h3 {
+      color: var(--green);
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .result-item p {
+      color: white;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .hidden {
+  display: none !important;
+}
+
+    /* Mobile-friendly styles */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 20px;
+        padding: 0 10px;
+      }
+
+      .search-container {
+        top: 70px;
+        padding: 10px;
+        margin: 0 10px;
+        flex-direction: column;
+      }
+
+      .search-container input {
+        font-size: 14px;
+        padding: 12px 15px;
+        margin-bottom: 8px;
+      }
+
+      .clear-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .results {
+        top: 160px;
+        padding: 15px 10px;
+        gap: 15px;
+      }
+
+      .result-item {
+        flex: 0 1 100%;
+        margin: 0;
+        padding: 15px;
+      }
+
+      .result-item h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .result-item p {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .result-item ul {
+        padding-left: 20px;
+        margin: 8px 0;
+      }
+
+      .result-item li {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .back-button {
+        top: 10px;
+        left: 10px;
+        padding: 8px 15px;
+        font-size: 13px;
+      }
+
+      footer {
+        font-size: 12px;
+        padding: 15px;
+      }
+    }
+
+    /* Touch-friendly styles */
+    @media (hover: none) {
+      .result-item {
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+      }
+
+      .result-item:active {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .clear-btn:active {
+        background-color: #ff4500;
+        transform: scale(0.98);
+      }
+
+      .back-button:active {
+        transform: scale(0.95);
+      }
+
+      a:active {
+        opacity: 0.8;
+      }
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      background-color: white;
+      color: var(--green);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      z-index: 3;
+    }
+
+    .back-button:hover {
+      background-color: var(--green);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Improve search container for mobile */
+    .search-container {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 768px) {
+      .search-container {
+        flex-direction: column;
+      }
+    }
+
+    /* Improve result items for better mobile reading */
+    .result-item {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .result-item a {
+      display: inline-block;
+      padding: 4px 0;
+    }
+
+    /* Add better spacing for mobile lists */
+    @media (max-width: 768px) {
+      .result-item ul {
+        margin: 10px 0;
+      }
+
+      .result-item li {
+        margin-bottom: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="parallax"></div>
+  <div class="overlay"></div>
+  <a href="index.html" class="back-button">← Back to Home</a>
+
+  <header>
+    <h1>Waste Management System</h1>
+  </header>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search waste management topics..." onkeyup="searchTopics()" />
+    <button class="clear-btn" onclick="clearSearch()">Clear</button>
+  </div>
+    <div class="results" id="resultsContainer">
+      <div class="result-item">
+        <h3>♻️ Recycling Methods</h3>
+        <p>Learn about different recycling processes like mechanical and chemical recycling, and their environmental impact.</p>
+      </div>
+      <div class="result-item">
+        <h3>🌱 Composting at Home</h3>
+        <p>Turn food scraps and garden waste into nutrient-rich compost, reducing landfill contribution.</p>
+      </div>
+      <div class="result-item">
+        <h3>🚯 Plastic Waste Reduction</h3>
+        <p>Tips, policies, and tools to reduce single-use plastic and encourage reusable alternatives.</p>
+      </div>
+
+      <div class="result-item clothes-item hidden">
+        <h3>👕 Clothes</h3>
+        <p>How to recycle clothes?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle clothes!</p>
+        <a href="https://youtu.be/uSMrqygBkjg?si=Qqwoqu3GN6D902gU" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Clothing Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Donate wearable clothes to charity</li>
+            <li>Repurpose old clothes into cleaning rags</li>
+            <li>Look for textile recycling programs</li>
+            <li>Check for clothing swap events</li>
+            <li>Consider upcycling into new items</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item bottles-item hidden">
+        <h3>🧴 Plastic Bottles</h3>
+        <p>How to recycle plastic bottles?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle plastic bottles!</p>
+        <a href="https://youtube.com/shorts/65KuQhwk92g?si=ab0dJOzY0dLBsRnu" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Bottle Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Rinse bottles before recycling</li>
+            <li>Remove caps and labels</li>
+            <li>Flatten bottles to save space</li>
+            <li>Check local recycling guidelines</li>
+            <li>Consider reusing for storage</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item can-item hidden">
+        <h3>🥫 Tin Can</h3>
+        <p>How to recycle Tin Can?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle Tin Can!</p>
+        <a href="https://youtu.be/5XAFMEBiouQ?si=dCf-fS4OhwzszFYY" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Tin Can Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Rinse cans thoroughly</li>
+            <li>Remove paper labels</li>
+            <li>Flatten cans if possible</li>
+            <li>Separate steel and aluminum cans</li>
+            <li>Check for sharp edges</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item organic-waste-item hidden">
+        <h3>🌿 Organic Waste</h3>
+        <p>How to recycle Organic Waste?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle Organic Waste!</p>
+        <a href="https://youtu.be/mDIVpJgjoXQ?si=4oCyFN3k2I8U2j1o" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Organic Waste:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Start a compost pile</li>
+            <li>Use a compost bin</li>
+            <li>Layer green and brown materials</li>
+            <li>Keep compost moist but not wet</li>
+            <li>Turn compost regularly</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item kitchen-scraps-item hidden">
+        <h3>🥬 Kitchen Scraps</h3>
+        <p>How to compost kitchen waste like vegetable peels, fruit scraps, coffee grounds, and eggshells?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to compost kitchen scraps!</p>
+        <a href="https://www.youtube.com/watch?v=zy70DAaeFBI" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Kitchen Scraps:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Collect scraps in a countertop bin</li>
+            <li>Chop large pieces into smaller bits</li>
+            <li>Mix with dry materials</li>
+            <li>Avoid meat and dairy products</li>
+            <li>Keep a good balance of materials</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item candy-wrappers-item hidden">
+        <h3>🍬 Candy Wrappers</h3>
+        <p>How to recycle candy wrappers and sweet packaging?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle candy wrappers!</p>
+        <a href="https://www.youtube.com/watch?v=MrdsC2pC3pk" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Candy Wrapper Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Clean wrappers thoroughly</li>
+            <li>Separate by material type</li>
+            <li>Bundle similar wrappers together</li>
+            <li>Check for specialized collection programs</li>
+            <li>Consider creative upcycling projects</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item paper-item hidden">
+        <h3>📄 Paper</h3>
+        <p>How to recycle Paper?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle paper!</p>
+        <a href="https://www.youtube.com/watch?v=H8zkeybyHcI" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Paper Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Remove staples and clips</li>
+            <li>Keep paper dry and clean</li>
+            <li>Separate by paper type</li>
+            <li>Shred sensitive documents</li>
+            <li>Check local guidelines</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item food-containers-item hidden">
+        <h3>🥡 Food Containers</h3>
+        <p>How to recycle Food Containers and Packaging?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle food containers!</p>
+        <a href="https://www.youtube.com/watch?v=13OKkCAOdv4" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Food Container Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Rinse containers thoroughly</li>
+            <li>Remove food residue</li>
+            <li>Check recycling symbols</li>
+            <li>Separate by material type</li>
+            <li>Flatten when possible</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item plastic-bags-item hidden">
+        <h3>🛍️ Plastic Bags</h3>
+        <p>How to recycle Plastic bags?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle plastic bags!</p>
+        <a href="https://www.youtube.com/watch?v=lTT2utfcHF0" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Bag Recycling:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Clean and dry bags</li>
+            <li>Remove receipts and labels</li>
+            <li>Bundle bags together</li>
+            <li>Use designated drop-off points</li>
+            <li>Consider reusable alternatives</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item straw-item hidden">
+        <h3>🥤 Plastic Straws</h3>
+        <p>How to properly dispose of plastic straws?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to handle plastic straws!</p>
+        <a href="https://www.youtube.com/watch?v=_DQozdK_BuY" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Straws:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Clean straws before recycling</li>
+            <li>Bundle straws together</li>
+            <li>Check local guidelines</li>
+            <li>Consider reusable alternatives</li>
+            <li>Use designated drop-off points</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item plastic-cap-item hidden">
+        <h3>Plastic Bottle Caps</h3>
+        <p>How to recycle plastic bottle caps and lids?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle plastic caps!</p>
+        <a href="https://youtu.be/5XAFMEBiouQ?si=dCf-fS4OhwzszFYY" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Caps:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Clean caps thoroughly</li>
+            <li>Separate by material type</li>
+            <li>Collect in a container</li>
+            <li>Check local guidelines</li>
+            <li>Look for cap collection programs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item plastic-cup-item hidden">
+        <h3>🥤 Plastic Cups</h3>
+        <p>How to properly recycle plastic cups and drink containers?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle plastic cups!</p>
+        <a href="https://www.youtube.com/watch?v=UsUyccKMkHA" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Cups:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Rinse cups thoroughly</li>
+            <li>Remove lids and straws</li>
+            <li>Check recycling numbers</li>
+            <li>Flatten when possible</li>
+            <li>Use designated collection points</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-item plastic-utensils-item hidden">
+        <h3>🍴 Plastic Utensils</h3>
+        <p>How to recycle plastic forks, spoons, and knives?</p>
+        <p style="color: rgb(255, 255, 255);">Here's a vid to watch and learn how to recycle plastic utensils!</p>
+        <a href="https://www.youtube.com/watch?v=bTqORnJbsec" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Watch this!</a>
+        <div style="margin-top: 15px;">
+          <p style="color: white; font-weight: bold;">Tips for Plastic Utensils:</p>
+          <ul style="color: white; line-height: 1.6;">
+            <li>Clean thoroughly before recycling</li>
+            <li>Bundle similar items together</li>
+            <li>Check local recycling guidelines</li>
+            <li>Consider reusable alternatives</li>
+            <li>Look for specialized collection points</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="donationMessage" class="result-item hidden">
+        <h3>❌ No results found for "<span id="searchedInput"></span>"</h3>
+        <p>Why not donate it to your nearest junk shop? ♻️</p>
+        <a href="https://www.google.com/maps/search/junk+shop" target="_blank" style="color: var(--dark-green); font-weight: bold; text-decoration: underline;">Find a junk shop near you!</a>
+      </div>
+    </div>
+
+  <footer>
+    © 2025 Smart Waste Management. All rights reserved.
+  </footer>
+
+  <script>
+    function searchTopics() {
+      const input = document.getElementById("searchInput").value.toLowerCase().trim();
+      const results = document.querySelectorAll(".result-item:not(#donationMessage)");
+      const donationMessage = document.getElementById("donationMessage");
+  
+      let found = false;
+  
+      results.forEach(item => {
+        const textContent = item.textContent.toLowerCase();
+        if (input !== "" && textContent.includes(input)) {
+          item.classList.remove("hidden");
+          found = true;
+        } else {
+          item.classList.add("hidden");
+        }
+      });
+  
+      if (input === "") {
+        results.forEach(item => {
+          
+          if (
+            item.classList.contains("clothes-item") ||
+            item.classList.contains("bottles-item") ||
+            item.classList.contains("can-item") ||
+            item.classList.contains("organic-waste-item") ||
+            item.classList.contains("kitchen-scraps-item") ||
+            item.classList.contains("candy-wrappers-item") ||
+            item.classList.contains("paper-item") ||
+            item.classList.contains("food-containers-item") ||
+            item.classList.contains("plastic-bags-item") ||
+            item.classList.contains("straw-item") ||
+            item.classList.contains("plastic-cap-item") ||
+            item.classList.contains("plastic-cup-item") ||
+            item.classList.contains("plastic-utensils-item")
+          ) {
+            item.classList.add("hidden");
+          } else {
+            item.classList.remove("hidden");
+          }
+        });
+        donationMessage.classList.add("hidden");
+      } else if (!found) {
+        document.getElementById("searchedInput").textContent = input;
+        donationMessage.classList.remove("hidden");
+      } else {
+        donationMessage.classList.add("hidden");
+      }
+    }
+  
+    function clearSearch() {
+      document.getElementById("searchInput").value = "";
+  
+      const allItems = document.querySelectorAll(".result-item");
+      const donationMessage = document.getElementById("donationMessage");
+  
+      allItems.forEach(item => {
+        if (
+          item.classList.contains("clothes-item") ||
+          item.classList.contains("bottles-item") ||
+          item.classList.contains("can-item") ||
+          item.classList.contains("organic-waste-item") ||
+          item.classList.contains("kitchen-scraps-item") ||
+          item.classList.contains("candy-wrappers-item") ||
+          item.classList.contains("paper-item") ||
+          item.classList.contains("food-containers-item") ||
+          item.classList.contains("plastic-bags-item") ||
+          item.classList.contains("straw-item") ||
+          item.classList.contains("plastic-cap-item") ||
+          item.classList.contains("plastic-cup-item") ||
+          item.classList.contains("plastic-utensils-item") ||
+          item.id === "donationMessage"
+        ) {
+          item.classList.add("hidden");
+        } else {
+          item.classList.remove("hidden");
+        }
+      });
+  
+      donationMessage.classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>
+
